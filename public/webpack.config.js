@@ -36,7 +36,7 @@ const config = {
     }),
     new WebpackPwaManifest({
       name: "Budget Tracker",
-      short_name: "Budget Tracket",
+      short_name: "Budget Tracker",
       description: "An application that allows you to keep track of all your budgets.",
       background_color: "#01579b",
       theme_color: "#ffffff",
