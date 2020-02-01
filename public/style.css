@@ -18,14 +18,16 @@ label {
   font-weight: 900;
 }
 
-input {
+input,
+select {
   border: 2px solid transparent;
   border-radius: 6px;
   padding: .4em .8em;
   background-color: #E2E8F0;
 }
 
-input:focus {
+input:focus,
+select:focus {
   background-color: #FFFFFF;
   border: 2px solid #CBD5E0;
   outline: 0;
@@ -76,6 +78,7 @@ form {
   margin: 0 auto;
 }
 
-.transaction-buttons {
+.transaction-buttons,
+.view-options {
   margin-top: 25px;
 }

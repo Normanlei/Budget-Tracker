@@ -26,6 +26,14 @@
       <label for="t-amount">Transaction Amount:</label>
       <input type="number" min="0" id="t-amount" placeholder="Amount" />
 
+      <label for="t-category">Transaction Category:</label>
+      <select id="t-category">
+        <option value="other" selected>Other</option>
+        <option value="entertainment">Entertainment</option>
+        <option value="household">Household</option>
+        <option value="organization">Organization</option>
+      </select>
+
       <div class="transaction-buttons">
         <button id="add-btn"><i class="fa fa-plus"></i> Add Funds</button>
         <button id="sub-btn">
@@ -33,15 +41,33 @@
         </button>
       </div>
       <p role="alert" class="error"></p>
+      <div class="view-options">
+        <label for="f-category">Category Filter:</label>
+        <select id="f-category">
+          <option value="all" selected>All</option>
+          <option value="other">Other</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="household">Household</option>
+          <option value="organization">Organization</option>
+        </select>
+      </div>
     </form>
 
     <div class="transactions">
       <table>
         <thead>
+          <th>Date & Time</th>
           <th>Transaction</th>
           <th>Amount</th>
+          <th>Category</th>
         </thead>
         <tbody id="tbody"></tbody>
+        <tfoot>
+          <tr>
+            <th colspan="2">Total :</th>
+            <td id="tfoottotal">0</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
 

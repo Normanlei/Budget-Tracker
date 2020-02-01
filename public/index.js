@@ -1,6 +1,16 @@
 let transactions = [];
 let myChart;
-import {saveRecord} from "./db";
+import { saveRecord } from "./db";
+
+const categoryFilterEl = document.getElementById("f-category");
+categoryFilterEl[0].selectedIndex = 0;
+
+categoryFilterEl.addEventListener("change", function (event) {
+  event.preventDefault();
+  let currCategory = this.value;
+  populateTable(currCategory);
+  populateChart(currCategory);
+});
 
 fetch("/api/transaction")
   .then(response => response.json())
@@ -8,8 +18,8 @@ fetch("/api/transaction")
     // save db data on global variable
     transactions = data;
     populateTotal();
-    populateTable();
-    populateChart();
+    populateTable("all");
+    populateChart("all");
   });
 
 function populateTotal() {
@@ -22,26 +32,56 @@ function populateTotal() {
   totalEl.textContent = total;
 }
 
-function populateTable() {
+function populateTable(category) {
   const tbody = document.querySelector("#tbody");
+  const total = document.querySelector("#tfoottotal");
   tbody.innerHTML = "";
-
-  transactions.forEach(transaction => {
-    // create and populate a table row
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
+  total.innerHTML = "";
+  let sum = 0;
+  if (category === "all") {
+    transactions.forEach(transaction => {
+      sum += transaction.value;
+      // create and populate a table row
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+      <td>${transaction.date.substring(0, 19)}</td> 
       <td>${transaction.name}</td>
       <td>${transaction.value}</td>
+      <td>${transaction.category}</td>
     `;
-
-    tbody.appendChild(tr);
-  });
+      tbody.appendChild(tr);
+    });
+    total.innerHTML = sum;
+  } else {
+    let filteredTransactions = transactions.filter(transaction => transaction.category === category);
+    filteredTransactions.forEach(transaction => {
+      sum += transaction.value;
+      // create and populate a table row
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+      <td>${transaction.date.substring(0, 19)}</td> 
+      <td>${transaction.name}</td>
+      <td>${transaction.value}</td>
+      <td>${transaction.category}</td>
+    `;
+      tbody.appendChild(tr);
+    });
+    total.innerHTML = sum;
+  }
 }
 
-function populateChart() {
-  // copy array and reverse it
-  const reversed = transactions.slice().reverse();
-  let sum = 0;
+function populateChart(category) {
+  let reversed =[];
+  let sum =0;
+  if (category === "all") {
+    // copy array and reverse it
+    reversed = transactions.slice().reverse();
+    sum = 0;
+  } else {
+    let filteredTransactions = transactions.filter(transaction => transaction.category === category);
+    reversed = filteredTransactions.reverse();
+    sum = 0;
+  }
 
   // create date labels for chart
   const labels = reversed.map(t => {
@@ -81,6 +121,7 @@ function populateChart() {
 function sendTransaction(isAdding) {
   const nameEl = document.querySelector("#t-name");
   const amountEl = document.querySelector("#t-amount");
+  const categoryEl = document.querySelector("#t-category");
   const errorEl = document.querySelector("form .error");
 
   // validate form
@@ -95,7 +136,8 @@ function sendTransaction(isAdding) {
   const transaction = {
     name: nameEl.value,
     value: amountEl.value,
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
+    category: categoryEl.value
   };
 
   // if subtracting funds, convert amount to negative number
@@ -107,8 +149,8 @@ function sendTransaction(isAdding) {
   transactions.unshift(transaction);
 
   // re-run logic to populate ui with new record
-  populateChart();
-  populateTable();
+  populateChart("all");
+  populateTable("all");
   populateTotal();
 
   // also send to server
@@ -128,6 +170,7 @@ function sendTransaction(isAdding) {
         // clear form
         nameEl.value = "";
         amountEl.value = "";
+        categoryEl[0].selectedIndex = 0;
       }
     })
     .catch(err => {
@@ -137,6 +180,7 @@ function sendTransaction(isAdding) {
       // clear form
       nameEl.value = "";
       amountEl.value = "";
+      categoryEl[0].selectedIndex = 0;
     });
 }
 
