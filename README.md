@@ -10,10 +10,15 @@ Here is how the application made of:
 * Backend: **Node**, **Express** , **MANIFEST** & **SERVICE WORKER** & **Webpack**
 
 
-### Demo
+### Deployment
+
 Heroku Depolyment: [Go Deploy!](https://budget-tracker-norman.herokuapp.com/)
 
-![demo-gif](public/assets/images/demo.gif)
+
+### Demo
+
+
+![demo-gif](public/images/demo.gif)
 
 
 ## Development
