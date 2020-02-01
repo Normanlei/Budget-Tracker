@@ -37,10 +37,8 @@ function populateTable(category) {
   const total = document.querySelector("#tfoottotal");
   tbody.innerHTML = "";
   total.innerHTML = "";
-  let sum = 0;
   if (category === "all") {
     transactions.forEach(transaction => {
-      sum += transaction.value;
       // create and populate a table row
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -51,11 +49,13 @@ function populateTable(category) {
     `;
       tbody.appendChild(tr);
     });
-    total.innerHTML = sum;
+    const sum = transactions.reduce((total, t) => {
+      return total + parseInt(t.value);
+    }, 0);
+    total.textContent = sum;
   } else {
     let filteredTransactions = transactions.filter(transaction => transaction.category === category);
     filteredTransactions.forEach(transaction => {
-      sum += transaction.value;
       // create and populate a table row
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -66,7 +66,10 @@ function populateTable(category) {
     `;
       tbody.appendChild(tr);
     });
-    total.innerHTML = sum;
+    const sum = filteredTransactions.reduce((total, t) => {
+      return total + parseInt(t.value);
+    }, 0);
+    total.textContent = sum;
   }
 }
 
